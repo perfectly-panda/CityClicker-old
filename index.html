@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>City Clicker</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <script>var path = "/wamp/www/cityclicker/public_html";</script>
+        
+        <script src="/wamp/www/cityclicker/public_html/js/libs/jquery/jquery.js"></script>
+        <script src="/wamp/www/cityclicker/public_html/js/libs/jquery-gamequery/jquery.gamequery.min.js"></script>
+        
+        <script src="/wamp/www/cityclicker/public_html/js/libs/penguin/utilities.js"></script>
+        <script src="/wamp/www/cityclicker/public_html/js/libs/penguin/resources.js"></script>
+        <script src="/wamp/www/cityclicker/public_html/js/libs/penguin/tiles.js"></script>
+        <script src="/wamp/www/cityclicker/public_html/js/libs/penguin/layout.js"></script>
+        <script src="/wamp/www/cityclicker/public_html/js/libs/penguin/player.js"></script>
+        <script src="/wamp/www/cityclicker/public_html/js/libs/penguin/game.js"></script>
+        <script src="/wamp/www/cityclicker/public_html/js/main.js"></script>
+        
+        <style>
+            #playgroundContainer{
+                height: 480px;
+                width: 640px;
+                border: 1px black solid;
+                float: left;
+            }
+            
+            #playground{
+                height: 480px;
+                width: 640px;
+            }
+            
+            #status{
+                padding: 1em;
+                margin: .5em;
+                float: left;
+                border: 1px black solid;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>City Clicker</h1>
+        
+        <div id="playgroundContainer">
+            <div id="playground"></div>
+        </div>
+        <div id="status">
+            <h2>Status</h2>
+            <p>Cash: <span id="resourceCash"></span> Per Tick: <span id="perTickCash"></span></p>
+            <p>Water: <span id="resourceWater"></span> Per Tick: <span id="perTickWater"></span></p>
+            
+            <h2>Expand</h2>
+            <p>Width: <span id="widthCost"></span><span id="width" onclick="javascript: game.Layout.ExtendWidth(game.Player)"> Purchase</span></p>
+            <p>Height: <span id="heightCost"></span><span id="height" onclick="javascript: game.Layout.ExtendHeight(game.Player)"> Purchase</span></p>
+            
+            <h2>Current Tile</h2>
+            <p>Tile Position: <span id="tilePos"></span></p>
+            <p>Tile Type: <span id="tileType"></span></p>
+            <p>Tile Value: <span id="tileValue"></span></p>
+            
+            <form id="tilePurchase">
+                <select id ="tilePurchaseSelect">
+                </select>
+                <input type="button" name="Purchase" value="Purchase" id="Purchase" />
+            </form>
+        </div>
+    </body>
+</html>

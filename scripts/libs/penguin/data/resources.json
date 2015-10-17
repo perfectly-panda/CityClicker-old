@@ -1,0 +1,21 @@
+{
+    "resources": {
+        "Cash": {
+            "args":{
+                "name": "Cash",
+                "displayName": "Cash",
+                "increment": "true"
+            },
+            "prototype":{}
+        },
+        "Water": {
+            "args":{
+                "name": "Water",
+                "displayName": "Water",
+                "increment": "true",
+                "maxCount": "0"
+            },
+            "prototype":{}
+        }
+    }
+}
