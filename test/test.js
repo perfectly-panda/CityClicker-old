@@ -31,9 +31,10 @@
 
             data.key = 'asf12asdf';
             assert.throws(function () { Penguin.Game.api(data) }, new CustomError("key value not valid"), "API returns error if accessing protected function with bad key");
+            
+            var mainKey = Penguin.Game.makeid();
 
-
-            data.key = Penguin.Game.register("test");
+            data.key = Penguin.Game.register("test", mainKey);
 
             assert.equal(data.key.length, 10, "correct response from registering compontent");
             assert.equal(Penguin.Game.api(data), "stuff", "now we have a valid key");
@@ -60,8 +61,24 @@
             Penguin.Game.api(data);
 
             assert.equal(j, "stuff", "receive notification");
+
+            data = { func: "checkModule", module: "Test" };
+            assert.equal(Penguin.Game.api(data), true, "Test is registered with the main API");
+            
+            data.module = "fake";
+            assert.equal(Penguin.Game.api(data), false, "False if module isn't registered");
+
+            data.module = null;
+            asset.throws(Penguin.Game.api(data), new CustomError("missing arguments"), "can't check a module we don't send");
         });
 
+        QUnit.test("check layout.js", function (assert) {
+            var value = "object";
+            var data = { func: "checkModule", module: "Layout" };
+
+            assert.equal(typeof Penguin.Layout, value, "check to make sure layout object exists");
+            assert.equal(Penguin.Game.api(data), true, "Layout is registered with the main API");
+        });
     }
 
 })();

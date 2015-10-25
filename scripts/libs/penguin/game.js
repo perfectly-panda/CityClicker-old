@@ -13,6 +13,7 @@ Penguin.Game = (function () {
     //private variables
     this.allowedComponents = ["test", "afterLoad"];
     this.requiredComponents = [];
+    this.loadedComponents = [];
     this.loadingComplete = false;
     this.keys = {};
     this.notification = {};
@@ -24,21 +25,11 @@ Penguin.Game = (function () {
 
     validateKey = function (key) {
         for (var item in self.keys) {
-            if (self.keys[item] === key) {
+            if (self.keys[item].receive === key) {
                 return true;
             }
         }
         return false;
-    };
-
-    makeid = function () {
-        var text = "";
-        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-        for (var i = 0; i < 10; i++)
-            text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-        return text;
     };
 
     //protected functions
@@ -90,6 +81,13 @@ Penguin.Game = (function () {
     api.returnCallback = function (args, callback) {
         return callback();
     };
+
+    api.checkModule = function (args) {
+        if
+        return true;
+    };
+
+
 
     //public functions
     public.api = function (args) {
@@ -148,14 +146,27 @@ Penguin.Game = (function () {
         return true;
     };
 
-    public.register = function (component) {
+    public.makeid = function () {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (var i = 0; i < 10; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
+    };
+
+    public.register = function (component, returnKey) {
         if (self.allowedComponents.indexOf(component) < 0 || self.loadingComplete == true) {
             throw new CustomError("registration not allowed");
         }
         else {
             if (typeof self.keys[component] === 'undefined') {
-                var id = makeid();
-                self.keys[component] = id;
+                var id = public.makeid();
+                self.keys[component] = {};
+
+                self.keys[component].receive = id;
+                self.keys[component].send = returnKey;
                 return id;
             } else {
                 throw new CustomError("registration not allowed");

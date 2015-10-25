@@ -2,9 +2,14 @@ var Penguin = Penguin || {};
 
 Penguin.Layout = (function($){
     self = this;
+
+    //function scopes
     public = {};
+    hidden = {};
+    api = {};
+
     
-    public.width = 2;
+  /*  public.width = 2;
     public.height = 2;
     
     public.widthCost = 100;
@@ -111,7 +116,7 @@ Penguin.Layout = (function($){
                 }
             });
         }
-        
+        */
         /*var prevValue = $("#tilePurchaseSelect :selected").val();
         
         select.html('');
@@ -128,6 +133,8 @@ Penguin.Layout = (function($){
                 
             }
         });*/
+
+    /*
     };
     
     public.ExtendWidth = function(player){
@@ -198,7 +205,7 @@ Penguin.Layout = (function($){
             $("#heightCost").text('$'+this.heightCost);
         }
 
-    };
+    };*/
     
     return public;
 })(jQuery);
