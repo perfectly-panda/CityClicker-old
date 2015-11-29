@@ -1,7 +1,4 @@
-var Penguin = Penguin || {};
-
-
-Penguin.Game = (function () {
+define([], function () {
 
     //function scopes
     var public = {};
@@ -11,7 +8,7 @@ Penguin.Game = (function () {
     self = this;
 
     //private variables
-    this.allowedComponents = ["test", "afterLoad"];
+    this.allowedComponents = ["test", "layout", "afterLoad"];
     this.requiredComponents = [];
     this.loadedComponents = [];
     this.loadingComplete = false;
@@ -37,7 +34,8 @@ Penguin.Game = (function () {
         return callback();
     };
 
-    hidden.notify = function (args) {
+    //api functions
+    api.notify = function (args) {
         if (typeof args === 'undefined'
             || typeof args.module === 'undefined'
             || typeof args.event === 'undefined') {
@@ -51,14 +49,13 @@ Penguin.Game = (function () {
         }
 
         for (var i = 0; i < self.notification[args.module][args.event].length; i++) {
-            self.notification[args.module][args.event][i]();
+            self.notification[args.module][args.event][i](args.args);
         }
 
         
     };
 
-    //api functions
-    api.registerNotifcation = function (args, callback) {
+    api.registerNotification = function (args, callback) {
         if (typeof args === 'undefined'
             || typeof args.module === 'undefined'
             || typeof args.event === 'undefined'
@@ -83,8 +80,20 @@ Penguin.Game = (function () {
     };
 
     api.checkModule = function (args) {
-        if
-        return true;
+        if (typeof args === 'undefined' || args === null) {
+            throw new CustomError("no arguments sent");
+        }
+        if (typeof args !== 'string') {
+            throw new CustomError("argument wrong type: expected string");
+        }
+
+
+        if (loadedComponents.indexOf(args.toString().toLowerCase()) >= 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
     };
 
 
@@ -161,6 +170,9 @@ Penguin.Game = (function () {
             throw new CustomError("registration not allowed");
         }
         else {
+            if (loadedComponents.indexOf(component.toString().toLowerCase()) < 0) {
+                loadedComponents.push(component.toString().toLowerCase());
+            }
             if (typeof self.keys[component] === 'undefined') {
                 var id = public.makeid();
                 self.keys[component] = {};
@@ -190,7 +202,7 @@ Penguin.Game = (function () {
     };
 
     return public;
-})();
+});
 
 function CustomError(message) {
     this.message = message;

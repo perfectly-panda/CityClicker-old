@@ -1,12 +1,71 @@
-var Penguin = Penguin || {};
-
-Penguin.Layout = (function($){
+define(["jquery", "penguin/game"], function($, game){
     self = this;
 
     //function scopes
     public = {};
     hidden = {};
     api = {};
+
+    //private variables
+    key = null;
+    gameKey = null;
+    requiredElements = [];
+
+    DOM = {};
+
+    //public variables
+    public.initialized = false;
+
+    //private functions
+    createChildren = function () {
+        self.requiredElements.forEach(function (element, index, array) {
+            if (self.DOM[element] == undefined) {
+                $("#layout").append("<div id='"+element+"'></div>");
+                self.DOM[element] = {};
+                self.DOM[element].html = $('#' + element);
+                self.DOM[element].index = index;
+            }
+        });
+    }
+
+    //hidden functions
+
+    //api functions
+
+    //public functions
+
+    public.getRequiredElements = function () {
+        return self.requiredElements;
+    }
+
+    public.addRequiredElement = function (args) {
+        if (typeof args === 'undefined' || args === null) {
+            throw new CustomError("no arguments sent");
+        }
+        if (typeof args !== 'string') {
+            throw new CustomError("argument wrong type: expected string");
+        }
+
+        self.requiredElements.push(args);
+        self.createChildren();
+    }
+
+    public.createLayout = function () {       
+        if ($("#layout").length > 0) {
+            self.createChildren();
+            public.initialized = true;
+        }
+        else
+        {
+            throw new CustomError("missing #layout");
+        }
+
+        return public.initialized;
+    }
+
+    //initialize module
+    self.key = game.makeid();
+    self.gameKey = game.register("layout", self.key);
 
     
   /*  public.width = 2;
@@ -208,5 +267,5 @@ Penguin.Layout = (function($){
     };*/
     
     return public;
-})(jQuery);
+});
 
