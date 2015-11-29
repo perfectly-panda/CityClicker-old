@@ -3,16 +3,19 @@ define(['qunit/QUnit', 'penguin/game', 'models/resources'], function (QUnit, gam
     var run = function () {
 
         QUnit.test("Check Resource Model", function (assert) {
-            QUnit.stop();
+            //assert.expect(3);
+            QUnit.stop(2);
 
-            assert.expect(3);
 
             //1
             assert.equal(typeof resources.resource, "function", "check to make sure resource model exists");
 
+            var done = assert.async(1);
+
             var callback = function () {
-                console.log("callback called");
-                assert.async();
+                assert.ok(true, "callback called");
+                done();
+                QUnit.start();
             };
 
             var data = {

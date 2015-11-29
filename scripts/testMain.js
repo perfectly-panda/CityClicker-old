@@ -42,15 +42,19 @@ require([
         testLayout,
         testResources
     ) {
-        //QUnit.load();
-        QUnit.config.autostart = false;
 
+        // Without this setTimeout, the specs don't always get execute in webKit browsers
+        setTimeout(function () {
 
-        testMain.run();
-        testLayout.run();
-        testResources.run();
+            QUnit.load();
 
-        QUnit.start();
+            testMain.run();
+            testLayout.run();
+            testResources.run();
+
+            QUnit.start();
+        }, 10);
+
 });
 
 
