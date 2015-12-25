@@ -1,22 +1,13 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>City Clicker Test</title>
+    <title>City Clicker</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 
-    <link rel="stylesheet" href="//code.jquery.com/qunit/qunit-1.19.0.css">
 
-    <script src="/scripts/libs/QUnit/QUnit.js"></script>
-    <script type="text/javascript">
-        window.addEventListener("load", function onLoad() {
-            QUnit.config.autostart = false;
-            window.removeEventListener("load", onLoad, true);
-        }, true);
-    </script>
-
-    <script data-main="/scripts/testMain" src="/scripts/require.js"></script>
+    <script data-main="/scripts/main" src="/scripts/require.js"></script>
 
 
     <style>
@@ -24,9 +15,8 @@
 </head>
 
 <body>
-    <div id="qunit"></div>
-    <div id="qunit-fixture">
-
-    </div>
+    <h1>CityClicker</h1>
+    <div id="loading">Loading....</div>
+    <div id="layout"></div>
 </body>
 </html>

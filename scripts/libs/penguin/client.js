@@ -1,4 +1,4 @@
-﻿define(["jquery", "penguin/interface"], function ($, game) {
+﻿define(["jquery"], function ($) {
     self = this;
     var client = {};
 
@@ -6,23 +6,28 @@
     DOM = {};
     gameStart = true;
     started = false;
+    gameInterface = null;
 
-    client.start = function () {
+    client.start = function (connection) {
         if (!started) {
-            game.setCallback(interfaceHandler);
-            self.createLayout();
-            self.started = true;
-            return self.started;
+            gameInterface = connection;
+            gameInterface.setCallback(interfaceHandler);
+            createLayout();
+            started = true;
+            //return started;
         }
-        
-        return self.started;
+
+        $("#loading").hide();
+
+        return started;
     };
 
     interfaceHandler = function (args) {
         if (typeof args === 'undefined' || args === null) {
             throw new CustomError("no arguments sent");
         }
-        if (typeof args !== 'array') {
+        if (typeof args !== 'object') {
+            console.log(args);
             throw new CustomError("argument wrong type: expected array");
         }
         if (typeof args[0] !== 'string') {
@@ -34,7 +39,7 @@
         
         switch (args[0]) {
             case "addElement":
-                self.addRequiredElement(args[1]);
+                addRequiredElement(args[1].element);
                 break;
             default:
                 break;
@@ -42,7 +47,7 @@
     };
 
     getRequiredElements = function () {
-        return game.getRequiredElements();
+        return gameInterface.getRequiredElements();
     }
 
     addRequiredElement = function (args) {
@@ -55,25 +60,20 @@
         createChildren();
     };
 
-    hideElement = function () {
-
-    };
-
     createChildren = function () {
-        console.log(self.getRequiredElements());
-        self.getRequiredElements().forEach(function (element, index, array) {
-            if (typeof self.DOM[element] == "undefined") {
+        getRequiredElements().forEach(function (element, index, array) {
+            if (typeof DOM[element] == "undefined") {
                 $("#layout").append("<div id='" + element + "'><h2>"+element+"</h2></div>");
-                self.DOM[element] = {};
-                self.DOM[element].html = $('#' + element);
-                self.DOM[element].index = index;
+                DOM[element] = {};
+                DOM[element].html = $('#' + element);
+                DOM[element].index = index;
             }
         });
     };
 
     createLayout = function () {
         if ($("#layout").length > 0) {
-            self.createChildren();
+            createChildren();
         }
         else {
             throw new CustomError("missing #layout");

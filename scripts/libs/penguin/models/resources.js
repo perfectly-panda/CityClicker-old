@@ -1,4 +1,4 @@
-define(["penguin/game"], function(game){
+define([], function(){
      
     resource = function(args) {
         /// <summary>Default resource model.</summary>
@@ -66,19 +66,6 @@ define(["penguin/game"], function(game){
                 self.UpdateCurrentCount(self.GetProperty("perTick"));
             }
         };
-
-        if (properties.display) {
-            var data = {
-                func: "notify",
-                args: {
-                    module: "resources",
-                    event: "new resource",
-                    args: null
-                }
-            };
-
-            game.api(data);
-        }
     }
 
     return {

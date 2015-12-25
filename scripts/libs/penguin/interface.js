@@ -1,5 +1,6 @@
-define(["jquery", "penguin/game"], function($, game){
+define(["penguin/game"], function(game){
     self = this;
+    init = false;
 
     //function scopes
     public = {};
@@ -10,7 +11,7 @@ define(["jquery", "penguin/game"], function($, game){
     key = null;
     gameKey = null;
     clientCallback = null;
-    requiredElements = ["Resources"];
+    requiredElements = [];
     allowedActions = ["buy", "sell"];
     
     //public variables
@@ -19,7 +20,7 @@ define(["jquery", "penguin/game"], function($, game){
    
 
     //hidden functions
-    hidden.addRequiredElement = function (args) {
+    public.addRequiredElement = function (args) {
         if (typeof args === 'undefined' || args === null) {
             throw new CustomError("no arguments sent");
         }
@@ -27,32 +28,37 @@ define(["jquery", "penguin/game"], function($, game){
             throw new CustomError("argument wrong type: expected string");
         }
 
-        self.requiredElements.push(args);
-        return clientCallback(["addElement", args]);
+        requiredElements.push(args);
+        return clientCallback(["addElement", { element: args }]);
     };
 
     //api functions
 
     //public functions
     public.setCallback = function (callback) {
-        self.clientCallback = callback;
+        clientCallback = callback;
     };
 
     public.getRequiredElements = function(){
-        return self.requiredElements;
+        return requiredElements;
     }
 
     public.getAllowedActions = function () {
-        return self.allowedActions;
+        return allowedActions;
     }
 
     public.sendAction = function (args) {
-
+        if (typeof args === 'undefined' || args === null) {
+            throw new CustomError("no arguments sent");
+        }
+        if (typeof args.action !== 'string') {
+            throw new CustomError("argument wrong type: expected string");
+        }
     }
 
-    //initialize module
-    self.key = game.makeid();
-    self.gameKey = game.register("layout", self.key);
+        //initialize module
+        self.key = game.makeid();
+        self.gameKey = game.register("layout", self.key);
 
     
   /*  public.width = 2;

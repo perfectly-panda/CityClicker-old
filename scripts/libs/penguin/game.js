@@ -8,12 +8,12 @@ define([], function () {
     self = this;
 
     //private variables
-    this.allowedComponents = ["test", "layout", "afterLoad"];
-    this.requiredComponents = [];
-    this.loadedComponents = [];
-    this.loadingComplete = false;
-    this.keys = {};
-    this.notification = {};
+    allowedComponents = ["test", "layout", "afterLoad"];
+    requiredComponents = [];
+    loadedComponents = [];
+    loadingComplete = false;
+    keys = {};
+    notification = {};
 
     //public variables
     public.version = '0.0.1';
@@ -21,8 +21,8 @@ define([], function () {
     //private functions
 
     validateKey = function (key) {
-        for (var item in self.keys) {
-            if (self.keys[item].receive === key) {
+        for (var item in keys) {
+            if (keys[item].receive === key) {
                 return true;
             }
         }
@@ -41,15 +41,15 @@ define([], function () {
             || typeof args.event === 'undefined') {
             throw new CustomError("missing arguments");
         }
-        if (typeof self.notification[args.module] === 'undefined') {
-            self.notification[args.module] = {};
+        if (typeof notification[args.module] === 'undefined') {
+            notification[args.module] = {};
         }
-        if (typeof self.notification[args.module][args.event] === 'undefined') {
-            self.notification[args.module][args.event] = [];
+        if (typeof notification[args.module][args.event] === 'undefined') {
+            notification[args.module][args.event] = [];
         }
 
-        for (var i = 0; i < self.notification[args.module][args.event].length; i++) {
-            self.notification[args.module][args.event][i](args.args);
+        for (var i = 0; i < notification[args.module][args.event].length; i++) {
+            notification[args.module][args.event][i](args.args);
         }
 
         
@@ -63,14 +63,14 @@ define([], function () {
             throw new CustomError("missing arguments");
         }
 
-        if (typeof self.notification[args.module] === 'undefined') {
-            self.notification[args.module] = {};
+        if (typeof notification[args.module] === 'undefined') {
+            notification[args.module] = {};
         }
-        if (typeof self.notification[args.module][args.event] === 'undefined') {
-            self.notification[args.module][args.event] = [];
+        if (typeof notification[args.module][args.event] === 'undefined') {
+            notification[args.module][args.event] = [];
         }
 
-        self.notification[args.module][args.event].push(callback);
+        notification[args.module][args.event].push(callback);
 
         return true;
     };
@@ -121,7 +121,7 @@ define([], function () {
         else if (typeof args.key !== 'string') {
             throw new CustomError("key value not valid");
         } else {
-            if (self.validateKey(args.key)) {
+            if (validateKey(args.key)) {
                 if (typeof api[args.func] !== 'undefined') {
                     return api[args.func](args.args, args.callback);
                 }
@@ -143,14 +143,14 @@ define([], function () {
             throw new CustomError("missing arguments");
         }
 
-        if (typeof self.notification[args.module] === 'undefined') {
-            self.notification[args.module] = {};
+        if (typeof notification[args.module] === 'undefined') {
+            notification[args.module] = {};
         }
-        if (typeof self.notification[args.module][args.event] === 'undefined') {
-            self.notification[args.module][args.event] = [];
+        if (typeof notification[args.module][args.event] === 'undefined') {
+            notification[args.module][args.event] = [];
         }
 
-        self.notification[args.module][args.event].push(callback);
+        notification[args.module][args.event].push(callback);
 
         return true;
     };
@@ -166,19 +166,19 @@ define([], function () {
     };
 
     public.register = function (component, returnKey) {
-        if (self.allowedComponents.indexOf(component) < 0 || self.loadingComplete == true) {
+        if (allowedComponents.indexOf(component) < 0 || loadingComplete == true) {
             throw new CustomError("registration not allowed");
         }
         else {
             if (loadedComponents.indexOf(component.toString().toLowerCase()) < 0) {
                 loadedComponents.push(component.toString().toLowerCase());
             }
-            if (typeof self.keys[component] === 'undefined') {
+            if (typeof keys[component] === 'undefined') {
                 var id = public.makeid();
-                self.keys[component] = {};
+                keys[component] = {};
 
-                self.keys[component].receive = id;
-                self.keys[component].send = returnKey;
+                keys[component].receive = id;
+                keys[component].send = returnKey;
                 return id;
             } else {
                 throw new CustomError("registration not allowed");
@@ -186,11 +186,8 @@ define([], function () {
         }
     };
 
-    public.load = function () {
-        //load components
-
-        //finalize loading
-        self.loadingComplete = true;
+    public.getManagers = function () {
+        return managers;
     };
 
     public.start = function () {
