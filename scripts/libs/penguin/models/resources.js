@@ -1,76 +1,13 @@
-define([], function(){
+define(["models/Base"], function(Model){
      
-    resource = function(args) {
-        /// <summary>Default resource model.</summary>
-        /// <param name="ID" type="integer">ID</param>
-        /// <param name="name" type="string">string</param>
-        /// <param name="group" type="string">group</param>
-        /// <param name="display" type="bool">display</param>
-       
-        var self = this;
-    
-        if(typeof args === 'undefined'){
-            args = {};
-        }
-        var properties = {
-            ID: args.ID || null,
-            name: args.name || "unnamed",
-            displayName: args.displayName || name,
-            group: args.group || "unnamed",
-            display: args.display || true,
-            div: args.div || null,
-    
-            currentCount: args.currentCount || 0,
-            maxCount: args.maxCount || -1,
-            perTick: args.perTick || 0,
-        
-            increment: args.increment || false,
-            retainOnReset: args.retainOnReset || false,
-    
-            customProperties: args.customProperties || null
-        };
-    
-        this.GetProperty = function(property){return properties[property];};
-    
-        this.SetName = function(n){properties.name = n;};
-        this.SetGroup = function(g){properties.group = g;};
-        this.SetDisplay=  function(d){properties.display = d;};
-        this.SetCurrentCount= function(c){
-            if(properties.maxCount === -1 || properties.maxCount >= c){
-                properties.currentCount = c;
-            }
-            else{
-                properties.currentCount = properties.maxCount;
-            }
-        };
-        this.SetMaxCount= function(c){properties.maxCount = c;};
-        this.SetPerTick= function(c){properties.perTick = c;};
-        this.SetIncrement= function(i){properties.increment = i;};
-        this.SetCustomProperty= function(n, p){properties.customProperties[n] = p};
+    var Resources = function (args) {
+        self = new Model(args);
 
-        this.UpdateCurrentCount= function(c){
-            tempCount = properties.currentCount + c;
+        return self;
 
-            if(properties.maxCount === -1 || properties.maxCount >= tempCount){
-                properties.currentCount = tempCount;
-            }
-            else{
-                properties.currentCount = properties.maxCount;
-            }
-        };
-        this.UpdateMaxCount= function(c){properties.maxCount = parseFloat(properties.maxCount) + parseFloat(c);};
-        this.UpdatePerTick= function(c){properties.perTick = parseFloat(properties.perTick) + parseFloat(c);};
-    
-        this.RunTick = function(){
-            if (properties.increment){
-                self.UpdateCurrentCount(self.GetProperty("perTick"));
-            }
-        };
     }
 
-    return {
-        resource: resource
-    };
+    return Resources;
     
 });
 /*

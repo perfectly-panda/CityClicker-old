@@ -41,6 +41,12 @@
             case "addElement":
                 addRequiredElement(args[1].element);
                 break;
+            case "addModel":
+                addModel(args[1].element);
+                break;
+            case "updateModel":
+                updateModel(args[1].element);
+                break;
             default:
                 break;
         };
@@ -59,6 +65,19 @@
         }
         createChildren();
     };
+
+    addModel = function (args) {
+        var newModel = "<div id='"+args.displayName+"'><span class='name'>"+args.displayName+": </span><span class='count'>"+args.currentCount+"</span></div>";
+        $("#" + args.section).append(newModel);
+
+        if (args.buy) {
+            $("#" + args.displayName).append("<span class='buy'> Buy </span>")
+        }
+    }
+
+    updateModel = function (args) {
+        $("#" + args.displayName +" > .count").text(args.currentCount);
+    }
 
     createChildren = function () {
         getRequiredElements().forEach(function (element, index, array) {

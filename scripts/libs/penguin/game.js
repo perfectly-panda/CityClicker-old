@@ -8,7 +8,7 @@ define([], function () {
     self = this;
 
     //private variables
-    allowedComponents = ["test", "layout", "afterLoad"];
+    allowedComponents = ["test", "layout", "afterLoad", "gameLoop"];
     requiredComponents = [];
     loadedComponents = [];
     loadingComplete = false;
@@ -57,9 +57,9 @@ define([], function () {
 
     api.registerNotification = function (args, callback) {
         if (typeof args === 'undefined'
-            || typeof args.module === 'undefined'
-            || typeof args.event === 'undefined'
-            || typeof callback !== 'function') {
+            || typeof args.module !== 'string'
+            || typeof args.event !== 'string'
+            || typeof args.callback !== 'function') {
             throw new CustomError("missing arguments");
         }
 
@@ -70,7 +70,7 @@ define([], function () {
             notification[args.module][args.event] = [];
         }
 
-        notification[args.module][args.event].push(callback);
+        notification[args.module][args.event].push(args.callback);
 
         return true;
     };
@@ -133,26 +133,6 @@ define([], function () {
                 throw new CustomError("key value not valid");
             }
         }
-    };
-
-    public.registerNotifcation = function (args, callback) {
-        if (typeof args === 'undefined'
-            || typeof args.module === 'undefined'
-            || typeof args.event === 'undefined'
-            || typeof callback !== 'function') {
-            throw new CustomError("missing arguments");
-        }
-
-        if (typeof notification[args.module] === 'undefined') {
-            notification[args.module] = {};
-        }
-        if (typeof notification[args.module][args.event] === 'undefined') {
-            notification[args.module][args.event] = [];
-        }
-
-        notification[args.module][args.event].push(callback);
-
-        return true;
     };
 
     public.makeid = function () {

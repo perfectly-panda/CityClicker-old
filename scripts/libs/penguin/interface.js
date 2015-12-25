@@ -12,14 +12,26 @@ define(["penguin/game"], function(game){
     gameKey = null;
     clientCallback = null;
     requiredElements = [];
-    allowedActions = ["buy", "sell"];
+    allowedActions = ["buy", "sell", "use", "play", "pause"];
     
     //public variables
 
     //private functions
-   
+    newModel = function (args) {
+        return clientCallback(["addModel", { element: args }]);
+    }
+
+    updateModel = function (args) {
+        return clientCallback(["updateModel", { element: args }]);
+    }
 
     //hidden functions
+
+    public.addAdditionalElements = function(args){
+        public.addRequiredElement(args);
+        return clientCallback(["addElement", { element: args }]);
+    }
+
     public.addRequiredElement = function (args) {
         if (typeof args === 'undefined' || args === null) {
             throw new CustomError("no arguments sent");
@@ -29,7 +41,6 @@ define(["penguin/game"], function(game){
         }
 
         requiredElements.push(args);
-        return clientCallback(["addElement", { element: args }]);
     };
 
     //api functions
@@ -59,6 +70,28 @@ define(["penguin/game"], function(game){
         //initialize module
         self.key = game.makeid();
         self.gameKey = game.register("layout", self.key);
+
+        data = {
+            func: "registerNotification",
+            args: {
+                module: "models",
+                event: "new model",
+                callback: newModel
+            }
+        };
+
+        game.api(data);
+
+        data = {
+            func: "registerNotification",
+            args: {
+                module: "models",
+                event: "update model",
+                callback: updateModel
+            }
+        };
+
+        game.api(data);
 
     
   /*  public.width = 2;

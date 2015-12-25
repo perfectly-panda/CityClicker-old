@@ -1,4 +1,24 @@
-{
+define([], function () {
+  var Resources = [
+    {
+      name: "Cash",
+      displayName: "Cash",
+      increment: true,
+      currentCount: 100,
+      perTick: 1
+    },
+    {
+      name: "MoreCash",
+      displayName: "MoreCash",
+      increment: true
+    }
+
+  ];
+
+  return Resources;
+});
+
+/*{
     "resources": {
         "Cash": {
             "args":{
@@ -18,4 +38,4 @@
             "prototype":{}
         }
     }
-}
+}*/

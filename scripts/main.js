@@ -7,6 +7,7 @@ require.config({
         , jquery: "//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min"
         , penguin: "libs/penguin"
         , models: "libs/penguin/models"
+        , data: "libs/penguin/data"
     },
     map: {
         // '*' means all modules will get 'jquery-private'
@@ -20,37 +21,38 @@ require.config({
     }
 });
 
-require([
-        "penguin/interface",
-        "penguin/client",
-        "penguin/modelManager"
-],
+require(["data/config"],
+    function (config) {
+        if (config.Local) {
+            require([
+                "penguin/interface"
+                ,"penguin/client"
+                ,"penguin/modelManager"
+                ,"penguin/loop"
+            ],
+            function (
+                gameInterface
+                ,client
+                ,manager
+                ,loop
+            ) {
+                var managers = {};
 
-    function (
-        gameInterface,
-        client,
-        manager
+                var modulesToLoad = config.Modules.map(function (m) { return 'models/' + m; });
+                require(modulesToLoad, function () {
+                    var args = arguments;
+                    config.Modules.forEach(function (element, index, array) {
+                        managers[element] = new manager(args[index], config.ModuleConfig[element]);
+                        gameInterface.addRequiredElement(element);
+                    });
 
-    )
-    {
-        var managers = {};
-
-        var siteMap = { modules: ["Resources"] };
-
-        var modulesToLoad = siteMap.modules.map(function (m) { return 'models/' + m; });
-        require(modulesToLoad, function () {
-            var args = arguments;
-            siteMap.modules.forEach(function (element, index, array) {
-                managers[element] = new manager(args[index]);
+                    client.start(gameInterface);
+                });
             });
-
-            client.start(gameInterface);
-
-            //initialize the browser
-            siteMap.modules.forEach(function (element, index, array) {
-                gameInterface.addRequiredElement(element);
-            });
-        });
+        }
+        else {
+            console.log("config error");
+        }
     }
 );
 
