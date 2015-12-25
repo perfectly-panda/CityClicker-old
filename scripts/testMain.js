@@ -33,14 +33,16 @@ require([
         "qunit/QUnit",
         "qunit/testMain",
         "qunit/testLayout",
-        "qunit/testResources"
+        "qunit/testResources",
+        "qunit/testClient"
     ],
 
     function (
         QUnit,
         testMain,
         testLayout,
-        testResources
+        testResources,
+        testClient
     ) {
 
         // Without this setTimeout, the specs don't always get execute in webKit browsers
@@ -51,6 +53,7 @@ require([
             testMain.run();
             testLayout.run();
             testResources.run();
+            testClient.run();
 
             QUnit.start();
         }, 10);

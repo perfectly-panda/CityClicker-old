@@ -9,36 +9,17 @@ define(["jquery", "penguin/game"], function($, game){
     //private variables
     key = null;
     gameKey = null;
-    requiredElements = [];
-
-    DOM = {};
-
+    clientCallback = null;
+    requiredElements = ["Resources"];
+    allowedActions = ["buy", "sell"];
+    
     //public variables
-    public.initialized = false;
 
     //private functions
-    createChildren = function () {
-        self.requiredElements.forEach(function (element, index, array) {
-            if (self.DOM[element] == undefined) {
-                $("#layout").append("<div id='"+element+"'></div>");
-                self.DOM[element] = {};
-                self.DOM[element].html = $('#' + element);
-                self.DOM[element].index = index;
-            }
-        });
-    }
+   
 
     //hidden functions
-
-    //api functions
-
-    //public functions
-
-    public.getRequiredElements = function () {
-        return self.requiredElements;
-    }
-
-    public.addRequiredElement = function (args) {
+    hidden.addRequiredElement = function (args) {
         if (typeof args === 'undefined' || args === null) {
             throw new CustomError("no arguments sent");
         }
@@ -47,20 +28,26 @@ define(["jquery", "penguin/game"], function($, game){
         }
 
         self.requiredElements.push(args);
-        self.createChildren();
+        return clientCallback(["addElement", args]);
+    };
+
+    //api functions
+
+    //public functions
+    public.setCallback = function (callback) {
+        self.clientCallback = callback;
+    };
+
+    public.getRequiredElements = function(){
+        return self.requiredElements;
     }
 
-    public.createLayout = function () {       
-        if ($("#layout").length > 0) {
-            self.createChildren();
-            public.initialized = true;
-        }
-        else
-        {
-            throw new CustomError("missing #layout");
-        }
+    public.getAllowedActions = function () {
+        return self.allowedActions;
+    }
 
-        return public.initialized;
+    public.sendAction = function (args) {
+
     }
 
     //initialize module
