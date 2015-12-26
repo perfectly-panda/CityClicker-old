@@ -5,8 +5,7 @@ define([], function () {
       displayName: "Cash",
       increment: true,
       currentCount: 100,
-      perTick: 1,
-        buy: false
+      perTick: 1
     },
     {
       name: "MoreCash",

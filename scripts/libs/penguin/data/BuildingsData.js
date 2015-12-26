@@ -4,12 +4,13 @@ define([], function () {
           name: "Blank",
           displayName: "Blank",
           increment: false,
-          display:false
+          display: false
       },
       {
           name: "BasicHouse",
           displayName: "Basic House",
-          increment: false
+          increment: false,
+          buy: true
       }
 
     ];

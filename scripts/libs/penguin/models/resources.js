@@ -1,11 +1,11 @@
 define(["models/Base"], function(Model){
      
-    var Resources = function (args) {
-        this.self = new Model(args);
+    var Resources = function () {
 
-        return this.self;
-
+        Model.apply(this, arguments);
     }
+
+    Resources.prototype = Model.prototype;
 
     return Resources;
     

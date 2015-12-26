@@ -7,70 +7,72 @@
         /// <param name="group" type="string">group</param>
         /// <param name="display" type="bool">display</param>
 
-        var public = {};
-
         var self = this;
+
 
         if (typeof args === 'undefined') {
             args = {};
         }
 
-        var properties = {
-            ID: args.ID || null,
-            name: args.name || "unnamed",
-            displayName: args.displayName || name,
-            group: args.group || "unnamed",
-            display: args.display || true,
-            buy: args.buy || false,
+        this.ID = args.ID || null;
+        this.name = args.name || "unnamed";
+        this.displayName = args.displayName || name;
+        this.group = args.group || "unnamed";
 
-            currentCount: args.currentCount || 0,
-            maxCount: args.maxCount || -1,
-            perTick: args.perTick || 0,
+        this.display = args.display;
+        if (typeof args.display == "undefined") {
+            this.display = true;
+        }
+        this.buy = args.buy;
+        if (typeof args.buy == "undefined") {
+            this.buy = false;
+        }
 
-            increment: args.increment || false,
-            retainOnReset: args.retainOnReset || false,
+        this.currentCount = args.currentCount || 0;
+        this.maxCount = args.maxCount || -1;
+        this.perTick = args.perTick || 0;
 
-            customProperties: args.customProperties || null
-        };
+        this.increment = args.increment || false;
+        this.retainOnReset = args.retainOnReset || false;
+    }
 
-        public.GetProperty = function (property) { return properties[property]; };
+    Base.prototype = {
+        GetProperty: function (property) { return this[property]; },
 
-        public.SetName = function (n) { properties.name = n; };
-        public.SetGroup = function (g) { properties.group = g; };
-        public.SetDisplay = function (d) { properties.display = d; };
-        public.SetCurrentCount = function (c) {
-            if (properties.maxCount === -1 || properties.maxCount >= c) {
-                properties.currentCount = c;
+        SetName: function (n) { this.name = n; },
+        SetGroup: function (g) { this.group = g; },
+        SetDisplay: function (d) { this.display = d; },
+        SetCurrentCount: function (c) {
+            if (this.maxCount === -1 || this.maxCount >= c) {
+                this.currentCount = c;
             }
             else {
-                properties.currentCount = properties.maxCount;
+                this.currentCount = this.maxCount;
             }
-        };
-        public.SetMaxCount = function (c) { properties.maxCount = c; };
-        public.SetPerTick = function (c) { properties.perTick = c; };
-        public.SetIncrement = function (i) { properties.increment = i; };
-        public.SetCustomProperty = function (n, p) { properties.customProperties[n] = p };
+        },
+        SetMaxCount: function (c) { this.maxCount = c; },
+        SetPerTick: function (c) { this.perTick = c; },
+        SetIncrement: function (i) { this.increment = i; },
+        SetCustomProperty: function (n, p) { this.customProperties[n] = p },
 
-        public.UpdateCurrentCount = function (c) {
-            tempCount = properties.currentCount + c;
+        UpdateCurrentCount: function (c) {
+            tempCount = this.currentCount + c;
 
-            if (properties.maxCount === -1 || properties.maxCount >= tempCount) {
-                properties.currentCount = tempCount;
+            if (this.maxCount === -1 || this.maxCount >= tempCount) {
+                this.currentCount = tempCount;
             }
             else {
-                properties.currentCount = properties.maxCount;
+                this.currentCount = this.maxCount;
             }
-        };
-        public.UpdateMaxCount = function (c) { properties.maxCount = parseFloat(properties.maxCount) + parseFloat(c); };
-        public.UpdatePerTick = function (c) { properties.perTick = parseFloat(properties.perTick) + parseFloat(c); };
+        },
+        UpdateMaxCount: function (c) { this.maxCount = parseFloat(this.maxCount) + parseFloat(c); },
+        UpdatePerTick: function (c) { this.perTick = parseFloat(this.perTick) + parseFloat(c); },
 
-        public.RunTick = function () {
-            if (properties.increment) {
-                public.UpdateCurrentCount(public.GetProperty("perTick"));
+        RunTick: function () {
+            if (this.increment) {
+                this.UpdateCurrentCount(this.GetProperty("perTick"));
             }
-        };
-
-        return public;
+        }
     }
 
     return Base;
