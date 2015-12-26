@@ -1,4 +1,23 @@
-{
+define([], function () {
+    var Buildings = [
+      {
+          name: "Blank",
+          displayName: "Blank",
+          increment: false,
+          display:false
+      },
+      {
+          name: "BasicHouse",
+          displayName: "Basic House",
+          increment: false
+      }
+
+    ];
+
+    return Buildings;
+});
+
+/*{
     "tiles": {
         "BlankTile": {
             "args": {
@@ -89,4 +108,4 @@
             }
         }
     }
-}
+}*/

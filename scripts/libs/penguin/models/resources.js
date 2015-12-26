@@ -1,9 +1,9 @@
 define(["models/Base"], function(Model){
      
     var Resources = function (args) {
-        self = new Model(args);
+        this.self = new Model(args);
 
-        return self;
+        return this.self;
 
     }
 

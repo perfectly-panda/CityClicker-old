@@ -1,115 +1,118 @@
 ﻿define(["penguin/game"], function (game) {
 
-    resourceManager = function (modelType, config) {
-        self = this;
-        public = {};
+    resourceManager = function (config) {
+        var self = this;
 
-        models = {};
-        type = modelType;
-        name = config.Name;
+        this.models = {};
+        this.config = config;
+        this.type = null;
 
-        //private functions
-        runTick = function () {
-            for (var key in models) {
-                models[key].RunTick();
-                if (models[key].GetProperty("display") && models[key].GetProperty("perTick") != 0) {
+        this.runTick = function (args, index, callback) {
+            for (var key in self.models) {
+                self.models[key].RunTick();
+                if (self.models[key].GetProperty("display") && self.models[key].GetProperty("perTick") != 0) {
                     var data = {
                         func: "notify",
                         args: {
                             module: "models",
                             event: "update model",
                             args: {
-                                displayName: models[key].GetProperty("displayName"),
-                                currentCount: models[key].GetProperty("currentCount"),
-                                maxCount: models[key].GetProperty("maxCount"),
-                                section: name
+                                displayName: self.models[key].GetProperty("displayName"),
+                                currentCount: self.models[key].GetProperty("currentCount"),
+                                maxCount: self.models[key].GetProperty("maxCount"),
+                                section: self.getName()
                             }
                         }
                     };
                     game.api(data);
                 }
             }
+
+            if (typeof index == 'integer') {
+                return callback[index + 1](args, index, callback);
+            }
         };
 
-        buy = function () {
-
-        };
-
-        sell = function () {
-
-        };
-
-        var use = function () {
+        buy= function() {
 
         };
 
-        //public functions
-        public.getType = function () {
-            return type;
-        }
+        sell= function() {
 
-        public.createModel = function (args) {
-            if(typeof models[args.name] == "undefined"){
-                models[args.name] = new type(args);
+        };
 
-                if (models[args.name].GetProperty("display")) {
+        use = function () {
+
+        };
+    }
+
+    resourceManager.prototype = {
+        setType: function (model) {
+            this.type = model;
+        },
+        getType: function () {
+            return this.type;
+        },
+        getName: function () {
+            return this.config.Name;
+        },
+        getModels: function () {
+            return this.models;
+        },
+
+        createModel: function(args) {
+            if(typeof this.models[args.name] == "undefined"){
+                this.models[args.name] = new this.type(args);
+
+                if (this.models[args.name].GetProperty("display")) {
                     var data = {
                         func: "notify",
                         args: {
                             module: "models",
                             event: "new model",
                             args: {
-                                displayName: models[args.name].GetProperty("displayName"),
-                                currentCount: models[args.name].GetProperty("currentCount"),
-                                maxCount: models[args.name].GetProperty("maxCount"),
-                                buy: models[args.name].GetProperty("buy"),
-                                section: name
+                                displayName: this.models[args.name].GetProperty("displayName"),
+                                currentCount: this.models[args.name].GetProperty("currentCount"),
+                                maxCount: this.models[args.name].GetProperty("maxCount"),
+                                buy: this.models[args.name].GetProperty("buy"),
+                                section: this.getName()
                             }
                         }
                     };
                     game.api(data);
                 }
             }
-        }
+        },
 
-        //initilization
-        if (config.tick) {
-            data = {
-                func: "registerNotification",
-                args: {
-                    module: "gameLoop",
-                    event: "runTick",
-                    callback: runTick
-                }
-            };
-
-            game.api(data);
-        }
-
-        if (typeof config.events !== "undefined" && config.events.length > 0) {
-            config.events.forEach(function (element, index, array) {
+        init: function () {
+            if (this.config.tick) {
                 data = {
                     func: "registerNotification",
                     args: {
-                        module: element.module,
-                        event: element.event,
-                        callback: self[element.callback]
+                        module: "gameLoop",
+                        event: "runTick",
+                        callback: this.runTick
                     }
                 };
 
                 game.api(data);
-            });
-        }
-
-        var modulesToLoad = 'data/' + config.Name;
-        require([modulesToLoad], function () {
-            var args = arguments[0];
-            for(var i = 0; i < args.length; i++) {
-                public.createModel(args[i]);
             }
-        });
 
-        return public;
+            if (typeof this.config.events !== "undefined" && this.config.events.length > 0) {
+                this.config.events.forEach(function (element, index, array) {
+                    data = {
+                        func: "registerNotification",
+                        args: {
+                            module: element.module,
+                            event: element.event,
+                            callback: this[element.callback]
+                        }
+                    };
+
+                    game.api(data);
+                });
+            }
+        }
     }
 
     return resourceManager;

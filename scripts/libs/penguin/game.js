@@ -48,9 +48,8 @@ define([], function () {
             notification[args.module][args.event] = [];
         }
 
-        for (var i = 0; i < notification[args.module][args.event].length; i++) {
-            notification[args.module][args.event][i](args.args);
-        }
+        return notification[args.module][args.event][0](args.args, 0 , notification[args.module][args.event]);
+
 
         
     };

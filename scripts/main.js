@@ -38,16 +38,33 @@ require(["data/config"],
             ) {
                 var managers = {};
 
-                var modulesToLoad = config.Modules.map(function (m) { return 'models/' + m; });
-                require(modulesToLoad, function () {
-                    var args = arguments;
-                    config.Modules.forEach(function (element, index, array) {
-                        managers[element] = new manager(args[index], config.ModuleConfig[element]);
-                        gameInterface.addRequiredElement(element);
-                    });
-
-                    client.start(gameInterface);
+                managers = config.ModuleConfig.map(function (m, index) {
+                    var newMan = CreateManager(m);
+                    newMan.init();
+                    gameInterface.addRequiredElement(newMan.getName());
+                    return newMan;
                 });
+
+                for (var i = 0; i < managers.length; i++) {
+                    (function (index) {
+                        require(['data/' + managers[index].getName() + "Data", 'models/' + managers[index].getName()], function () {
+                            var args = arguments[0];
+                            var model = arguments[1];
+                            managers[index].setType(model);
+                            for (var j = 0; j < args.length; j++) {
+                                (function (mod) {
+                                    managers[index].createModel(args[mod]);
+                                })(j);
+                            }
+                        });
+                    })(i);
+                }
+
+                client.start(gameInterface);
+
+                function CreateManager(m) {
+                    return new manager(m);
+                }
             });
         }
         else {
@@ -55,6 +72,7 @@ require(["data/config"],
         }
     }
 );
+
 
 
 

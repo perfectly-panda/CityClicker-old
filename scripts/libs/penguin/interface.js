@@ -17,12 +17,20 @@ define(["penguin/game"], function(game){
     //public variables
 
     //private functions
-    newModel = function (args) {
+    newModel = function (args, index, callback) {
         return clientCallback(["addModel", { element: args }]);
+
+        if (typeof index == 'integer') {
+            return callback[index + 1](args, index, callback);
+        }
     }
 
-    updateModel = function (args) {
+    updateModel = function (args, index, callback) {
         return clientCallback(["updateModel", { element: args }]);
+
+        if (typeof index == 'integer') {
+            return callback[index + 1](args, index, callback);
+        }
     }
 
     //hidden functions

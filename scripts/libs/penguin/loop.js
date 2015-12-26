@@ -16,20 +16,32 @@
         }
     };
 
-    run = function () {
+    run = function (args, index, callback) {
         if (running) {
             game.api(loop);
             setTimeout(function () { run(); }, 100);
         }
+
+        if (typeof index == 'integer') {
+            return callback[index + 1](args, index, callback);
+        }
     };
 
-    start = function () {
+    start = function (args, index, callback) {
         running = true;
-        setTimeout(function () { run();},100);
+        setTimeout(function () { run(); }, 100);
+
+        if (typeof index == 'integer') {
+            return callback[index + 1](args, index, callback);
+        }
     }
 
-    stop = function () {
+    stop = function (args, index, callback) {
         running = false;
+
+        if (typeof index == 'integer') {
+            return callback[index + 1](args, index, callback);
+        }
     };
 
     //initialize module
