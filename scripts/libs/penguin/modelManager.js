@@ -17,6 +17,7 @@
                             module: "models",
                             event: "update model",
                             args: {
+                                name: self.models[key].GetProperty("name"),
                                 displayName: self.models[key].GetProperty("displayName"),
                                 currentCount: self.models[key].GetProperty("currentCount"),
                                 maxCount: self.models[key].GetProperty("maxCount"),
@@ -71,6 +72,7 @@
                             module: "models",
                             event: "new model",
                             args: {
+                                name: this.models[args.name].GetProperty("name"),
                                 displayName: this.models[args.name].GetProperty("displayName"),
                                 currentCount: this.models[args.name].GetProperty("currentCount"),
                                 maxCount: this.models[args.name].GetProperty("maxCount"),

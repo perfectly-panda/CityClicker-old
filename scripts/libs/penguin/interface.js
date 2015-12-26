@@ -17,16 +17,30 @@ define(["penguin/game"], function(game){
     //public variables
 
     //private functions
-    newModel = function (args, index, callback) {
-        return clientCallback(["addModel", { element: args }]);
+    var newModel = function (args, index, callback) {
+        if (typeof clientCallback == "function") {
+            clientCallback(["addModel", { element: args }]);
+        }
 
         if (typeof index == 'integer') {
             return callback[index + 1](args, index, callback);
         }
     }
 
-    updateModel = function (args, index, callback) {
-        return clientCallback(["updateModel", { element: args }]);
+    var updateModel = function (args, index, callback) {
+        if (typeof clientCallback == "function") {
+            clientCallback(["updateModel", { element: args }]);
+        }
+
+        if (typeof index == 'integer') {
+            return callback[index + 1](args, index, callback);
+        }
+    }
+
+    var loopStatus = function (args, index, callback) {
+        if (typeof clientCallback == "function") {
+            clientCallback(["loopStatus", args ]);
+        }
 
         if (typeof index == 'integer') {
             return callback[index + 1](args, index, callback);
@@ -70,8 +84,23 @@ define(["penguin/game"], function(game){
         if (typeof args === 'undefined' || args === null) {
             throw new CustomError("no arguments sent");
         }
-        if (typeof args.action !== 'string') {
+        if (typeof args.event !== 'string') {
+            console.log(args);
             throw new CustomError("argument wrong type: expected string");
+        }
+        if (allowedActions.indexOf(args.event) >= 0) {
+            if (args.event == "pause" || args.event == "play") {
+                data = {
+                    func: "notify",
+                    args: {
+                        module: "gameLoop",
+                        event: args.event,
+                        args: {}
+                    }
+                };
+
+                game.api(data);
+            }
         }
     }
 
@@ -98,6 +127,19 @@ define(["penguin/game"], function(game){
                 callback: updateModel
             }
         };
+
+        game.api(data);
+
+        data = {
+            func: "registerNotification",
+            args: {
+                module: "gameLoop",
+                event: "status",
+                callback: loopStatus
+            }
+        };
+
+   
 
         game.api(data);
 

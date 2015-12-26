@@ -48,13 +48,12 @@ define([], function () {
             notification[args.module][args.event] = [];
         }
 
-        return notification[args.module][args.event][0](args.args, 0 , notification[args.module][args.event]);
-
-
-        
+        if (typeof notification[args.module][args.event][0] == 'function') {
+            return notification[args.module][args.event][0](args.args, 0, notification[args.module][args.event]);
+        }
     };
 
-    api.registerNotification = function (args, callback) {
+    api.registerNotification = function (args) {
         if (typeof args === 'undefined'
             || typeof args.module !== 'string'
             || typeof args.event !== 'string'

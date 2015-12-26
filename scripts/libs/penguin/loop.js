@@ -30,6 +30,18 @@
     start = function (args, index, callback) {
         running = true;
         setTimeout(function () { run(); }, 100);
+        console.log("started");
+
+        data = {
+            func: "notify",
+            args: {
+                module: "gameLoop",
+                event: "status",
+                args: {status: "started"}
+            }
+        };
+
+        game.api(data);
 
         if (typeof index == 'integer') {
             return callback[index + 1](args, index, callback);
@@ -38,6 +50,17 @@
 
     stop = function (args, index, callback) {
         running = false;
+        console.log("stopped");
+        data = {
+            func: "notify",
+            args: {
+                module: "gameLoop",
+                event: "status",
+                args: { status: "stopped" }
+            }
+        };
+
+        game.api(data);
 
         if (typeof index == 'integer') {
             return callback[index + 1](args, index, callback);
@@ -52,7 +75,7 @@
         func: "registerNotification",
         args: {
             module: "gameLoop",
-            event: "start",
+            event: "play",
             callback: start
         }
     };
@@ -61,7 +84,7 @@
 
     data.args = {
         module: "gameLoop",
-        event: "stop",
+        event: "pause",
         callback: stop
     }
 

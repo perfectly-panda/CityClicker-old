@@ -2,8 +2,6 @@
 
     var Resources = function () {
         Model.apply(this, arguments);
-
-        console.log(this.buy);
     }
 
     Resources.prototype = Model.prototype;

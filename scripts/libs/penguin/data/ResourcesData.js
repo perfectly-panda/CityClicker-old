@@ -1,11 +1,11 @@
 define([], function () {
   var Resources = [
     {
-      name: "Cash",
-      displayName: "Cash",
-      increment: true,
-      currentCount: 100,
-      perTick: 1
+      name: "Cash"
+      ,displayName: "Cash"
+      ,increment: true
+      ,currentCount: 100
+      //,perTick: 1
     },
     {
       name: "MoreCash",

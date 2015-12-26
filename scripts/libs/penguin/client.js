@@ -17,7 +17,30 @@
             //return started;
         }
 
+        $("#start")
+            .hide()
+            .click(function () {
+                var data = {
+                    event: "play",
+                    args: {}
+                }
+
+                sendEvent(data);
+            });
+        $("#pause")
+            .show()
+            .click(function () {
+                var data = {
+                    event: "pause",
+                    args: {}
+                }
+
+                sendEvent(data);
+            });
+
         $("#loading").hide();
+
+        
 
         return started;
     };
@@ -47,6 +70,18 @@
             case "updateModel":
                 updateModel(args[1].element);
                 break;
+            case "loopStatus":
+                if (args[1].status == "started")
+                {
+                    $("#start").hide();
+                    $("#pause").show();
+                }
+                else if (args[1].status == "stopped")
+                {
+                    $("#start").show();
+                    $("#pause").hide();
+                }
+                break;
             default:
                 break;
         };
@@ -67,17 +102,17 @@
     };
 
     addModel = function (args) {
-        var newModel = "<div id='"+args.displayName+"'><span class='name'>"+args.displayName+": </span><span class='count'>"+args.currentCount+"</span></div>";
+        var newModel = "<div id='" + args.name + "'><span class='name'>" + args.displayName + ": </span><span class='count'>" + args.currentCount + "</span></div>";
         $("#" + args.section).append(newModel);
 
         if (args.buy) {
-            $("#" + args.displayName).append("<span class='buy'> Buy </span>")
+            $("#" + args.name).append("<span class='buy'> Buy </span>")
         }
-    }
+    };
 
     updateModel = function (args) {
-        $("#" + args.displayName +" > .count").text(args.currentCount);
-    }
+        $("#" + args.name + " > .count").text(args.currentCount);
+    };
 
     createChildren = function () {
         getRequiredElements().forEach(function (element, index, array) {
@@ -97,6 +132,10 @@
         else {
             throw new CustomError("missing #layout");
         }
+    };
+
+    sendEvent = function (args) {
+        gameInterface.sendAction(args);
     };
 
     return client;
