@@ -138,5 +138,14 @@
         gameInterface.sendAction(args);
     };
 
+    $("#layout").on("click","span.buy", function () {
+        data = {
+            event: "buy",
+            module: $(this).parent().parent().attr('id'),
+            item: $(this).parent().attr('id')
+        };
+        gameInterface.sendAction(data);
+    });
+
     return client;
 });

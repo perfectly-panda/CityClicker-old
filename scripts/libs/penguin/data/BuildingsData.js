@@ -10,7 +10,26 @@ define([], function () {
           name: "BasicHouse",
           displayName: "Basic House",
           increment: false,
-          buy: true
+          purchase: {
+              models: ["Resources"],
+              items: ["Cash"],
+              amounts: [50]
+          },
+          value: {
+              models: ["Resources"],
+              items: ["Cash"],
+              amounts: [.1]
+          },
+          sell: {
+              models: ["Resources"],
+              items: ["Cash"],
+              amounts: [10]
+          },
+          sellValue: {
+              models: ["Resources"],
+              items: ["Cash"],
+              amounts: [1]
+          }
       }
 
     ];

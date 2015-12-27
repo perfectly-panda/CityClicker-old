@@ -2,9 +2,6 @@
     self = this;
     running = true;
 
-    key = null;
-    gameKey = null;
-
     public = {};
 
     loop = {
@@ -68,8 +65,6 @@
     };
 
     //initialize module
-    self.key = game.makeid();
-    self.gameKey = game.register("gameLoop", self.key);
 
     data = {
         func: "registerNotification",

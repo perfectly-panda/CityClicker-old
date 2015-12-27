@@ -1,4 +1,4 @@
-define([], function () {
+define(["penguin/clientEvent"], function (clientEvent) {
 
     //function scopes
     var public = {};
@@ -9,8 +9,6 @@ define([], function () {
 
     //private variables
     allowedComponents = ["test", "layout", "afterLoad", "gameLoop"];
-    requiredComponents = [];
-    loadedComponents = [];
     loadingComplete = false;
     keys = {};
     notification = {};
@@ -29,11 +27,6 @@ define([], function () {
         return false;
     };
 
-    //protected functions
-    hidden.protectedTest = function (args, callback) {
-        return callback();
-    };
-
     //api functions
     api.notify = function (args) {
         if (typeof args === 'undefined'
@@ -48,9 +41,15 @@ define([], function () {
             notification[args.module][args.event] = [];
         }
 
-        if (typeof notification[args.module][args.event][0] == 'function') {
+        if (typeof notification[args.module][args.event][0] === 'function') {
+            //console.log(args.args);
+            //console.log(notification[args.module][args.event][0]);
             return notification[args.module][args.event][0](args.args, 0, notification[args.module][args.event]);
         }
+    };
+
+    api.clientEvent = function (args) {
+        new clientEvent(args, api.notify);
     };
 
     api.registerNotification = function (args) {
@@ -71,10 +70,6 @@ define([], function () {
         notification[args.module][args.event].push(args.callback);
 
         return true;
-    };
-
-    api.returnCallback = function (args, callback) {
-        return callback();
     };
 
     api.checkModule = function (args) {
@@ -131,49 +126,6 @@ define([], function () {
                 throw new CustomError("key value not valid");
             }
         }
-    };
-
-    public.makeid = function () {
-        var text = "";
-        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-        for (var i = 0; i < 10; i++)
-            text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-        return text;
-    };
-
-    public.register = function (component, returnKey) {
-        if (allowedComponents.indexOf(component) < 0 || loadingComplete == true) {
-            throw new CustomError("registration not allowed");
-        }
-        else {
-            if (loadedComponents.indexOf(component.toString().toLowerCase()) < 0) {
-                loadedComponents.push(component.toString().toLowerCase());
-            }
-            if (typeof keys[component] === 'undefined') {
-                var id = public.makeid();
-                keys[component] = {};
-
-                keys[component].receive = id;
-                keys[component].send = returnKey;
-                return id;
-            } else {
-                throw new CustomError("registration not allowed");
-            }
-        }
-    };
-
-    public.getManagers = function () {
-        return managers;
-    };
-
-    public.start = function () {
-
-    };
-
-    public.stop = function () {
-
     };
 
     return public;

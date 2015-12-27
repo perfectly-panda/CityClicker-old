@@ -6,17 +6,23 @@ define([], function () {
     [
         {
             Name: "Resources",
-            tick: true
+            tick: true,
+            events:
+                [{
+                    module: "Resources",
+                    event: "clientEvent",
+                    callback: "clientEvent"
+                }]
         },
         {
             Name: "Buildings",
             tick: false,
             events: 
-                {
-                    module: "models",
-                    event: "buy",
-                    callback: "buy"
-                }
+                [{
+                    module: "Buildings",
+                    event: "clientEvent",
+                    callback: "clientEvent"
+                }]
         }
     ]
   }

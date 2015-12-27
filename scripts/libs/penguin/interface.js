@@ -8,8 +8,6 @@ define(["penguin/game"], function(game){
     api = {};
 
     //private variables
-    key = null;
-    gameKey = null;
     clientCallback = null;
     requiredElements = [];
     allowedActions = ["buy", "sell", "use", "play", "pause"];
@@ -40,6 +38,16 @@ define(["penguin/game"], function(game){
     var loopStatus = function (args, index, callback) {
         if (typeof clientCallback == "function") {
             clientCallback(["loopStatus", args ]);
+        }
+
+        if (typeof index == 'integer') {
+            return callback[index + 1](args, index, callback);
+        }
+    }
+
+    var logEvent = function (args, index, callback) {
+        if (typeof clientCallback == "function") {
+            clientCallback(["logEvent", args]);
         }
 
         if (typeof index == 'integer') {
@@ -101,13 +109,24 @@ define(["penguin/game"], function(game){
 
                 game.api(data);
             }
+            else {
+                data = {
+                    func: "clientEvent",
+                    args: {
+                        module: args.module,
+                        args: {
+                            event: args.event,
+                            item: args.item
+                        }
+                    }
+                };
+
+                game.api(data);
+            }
         }
     }
 
         //initialize module
-        self.key = game.makeid();
-        self.gameKey = game.register("layout", self.key);
-
         data = {
             func: "registerNotification",
             args: {
@@ -140,6 +159,19 @@ define(["penguin/game"], function(game){
         };
 
    
+
+        game.api(data);
+
+        data = {
+            func: "registerNotification",
+            args: {
+                module: "log",
+                event: "log",
+                callback: logEvent
+            }
+        };
+
+
 
         game.api(data);
 

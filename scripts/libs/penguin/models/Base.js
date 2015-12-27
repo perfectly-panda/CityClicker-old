@@ -23,12 +23,11 @@
         if (typeof args.display == "undefined") {
             this.display = true;
         }
-        this.buy = args.buy;
-        if (typeof args.buy == "undefined") {
-            this.buy = false;
-        }
+
+        this.buy = false;
 
         this.currentCount = args.currentCount || 0;
+        this.reserveCount = 0;
         this.maxCount = args.maxCount || -1;
         this.perTick = args.perTick || 0;
 
@@ -59,18 +58,59 @@
             tempCount = this.currentCount + c;
 
             if (this.maxCount === -1 || this.maxCount >= tempCount) {
-                this.currentCount = tempCount;
+                this.currentCount = parseFloat((tempCount).toFixed(2));
+                return true;
             }
             else {
-                this.currentCount = this.maxCount;
+                this.currentCount = parseFloat((this.maxCount).toFixed(2));
+                return false;
             }
         },
-        UpdateMaxCount: function (c) { this.maxCount = parseFloat(this.maxCount) + parseFloat(c); },
-        UpdatePerTick: function (c) { this.perTick = parseFloat(this.perTick) + parseFloat(c); },
+        UpdateMaxCount: function (c) { this.maxCount = parseFloat((this.maxCount + parseFloat(c)).toFixed(2)); },
+        UpdatePerTick: function (c) { this.perTick = parseFloat((this.perTick + parseFloat(c)).toFixed(2)); },
 
         RunTick: function () {
             if (this.increment) {
-                this.UpdateCurrentCount(this.GetProperty("perTick"));
+                this.UpdateCurrentCount(this.perTick);
+            }
+        },
+        ReserveCount: function (c) {
+            if (this.currentCount >= c) {
+                this.UpdateCurrentCount(-c);
+                this.reserveCount = this.reserveCount + c;
+                return true;
+            }
+            
+            return false;
+        },
+        ReleaseReserve: function (c) {
+            if (this.reserveCount >= c) {
+                this.UpdateCurrentCount(c);
+                this.reserveCount = this.reserveCount - c;
+                return true;
+            }
+            else {
+                this.UpdateCurrentCount(this.reserveCount);
+                this.reserveCount = 0;
+                return true;
+            }
+        },
+        UseReserve: function (c) {
+            if (this.reserveCount >= c) {
+                this.reserveCount = this.reserveCount - c;
+                return true;
+            }
+            else {
+                this.reserveCount = 0;
+                return true;
+            }
+        },
+        UpdateCost: function () {
+            if (typeof this.purchase !== "undefined" && this.purchase !== null) {
+                for (var i = 0; i < this.purchase.amounts.length; i++) {
+                    this.purchase.amounts[i] = parseInt(this.purchase.amounts[i] * 1.125);
+                    console.log(this.purchase.amounts[i]);
+                }
             }
         }
     }
